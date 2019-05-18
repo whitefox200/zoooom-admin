@@ -1,33 +1,32 @@
-const Discord = require('discord.js');  
-const db = require('quick.db');  
-const axios = require('axios');
-const path = require('path');
-const ms = require('ms');
-const hastebin = require('hastebin-gen');  
-const client = new Discord.Client();    
-const Canvas = require('canvas');        
-const fs = require("fs"); 
-const getYoutubeID = require('get-youtube-id'); 
-const moment = require("moment");   
-const { Client, Util } = require('discord.js');  
-const UserBlocked = new Set();  
-const jimp = require('jimp');   
-const math = require('math-expression-evaluator'); 
-const stripIndents = require('common-tags').stripIndents;
-const figlet = require('figlet'); 
-const queue = new Map(); 
-const zalgo = require('zalgolize');   
-const fetchVideoInfo = require('youtube-info');
-const YouTube = require('simple-youtube-api');
-const ytdl = require('ytdl-core');
-const youtube = new YouTube("AIzaSyAdORXg7UZUo7sePv97JyoDqtQVi3Ll0b8");
-const sql = require("sqlite");
-const dateFormat = require('dateformat'); 
-const pretty = require('pretty-ms') 
-let profile = JSON.parse(fs.readFileSync("profile.json", "utf8"))
-
-,ti={}  
-,spee={}; 
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const prefix = '.'
+ 
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+client.user.setGame(`Nothing`,"http://twitch.tv/S-F")
+  console.log('')
+  console.log('')
+  console.log('╔[═════════════════════════════════════════════════════════════════]╗')
+  console.log(`[Start] ${new Date()}`);
+  console.log('╚[═════════════════════════════════════════════════════════════════]╝')
+  console.log('')
+  console.log('╔[════════════════════════════════════]╗');
+  console.log(`Logged in as * [ " ${client.user.username} " ]`);
+  console.log('')
+  console.log('Informations :')
+  console.log('')
+  console.log(`servers! [ " ${client.guilds.size} " ]`);
+  console.log(`Users! [ " ${client.users.size} " ]`);
+  console.log(`channels! [ " ${client.channels.size} " ]`);
+  console.log('╚[════════════════════════════════════]╝')
+  console.log('')
+  console.log('╔[════════════]╗')
+  console.log(' Bot Is Online')
+  console.log('╚[════════════]╝')
+  console.log('')
+  console.log('')
+});
 
 
 
@@ -973,4 +972,4 @@ message.guild.members.filter(m => m.presence.status === 'online').forEach(m => {
 
 
 
-client.login(process.env.TOKEN);
+client.login(process.env.BOT_TOKEN);
