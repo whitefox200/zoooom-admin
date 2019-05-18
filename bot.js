@@ -973,4 +973,4 @@ message.guild.members.filter(m => m.presence.status === 'online').forEach(m => {
 
 
 
-client.login("NTU4NDIwODI5MDI5OTI0ODc0.D3WlcQ.Ni5lDJwBMxupoV0bomDVWTuh2Q0");
+client.login("NTU4NDIwODI5MDI5OTI0ODc0.XOBEJQ.P9PDwCzS6owA5UsmpD_WM5IzGPk");
