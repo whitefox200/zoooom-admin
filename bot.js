@@ -35,43 +35,145 @@ client.user.setGame(`Impossible / مستحيل`,"http://twitch.tv/S-F")
 
 
 
+
+
+
+
+
+let emojiss = require("node-emoji");//npm i node-emoji
+client.on("message", msg=>{
+if(msg.content.startsWith(`${prefix}setRole`)){
+if(!msg.member.hasPermission("ADMINISTRATOR")) return msg.reply("you don't have permission").then(s => {s.delete(1600);})
+msg.reply("منشن الروم الي تبي فيه التفعيل").then(msgs=>{
+  const filter = response => response.author.id === msg.author.id;
+  msg.channel.awaitMessages(filter, { maxMatches: 1, time: 30000, errors: ['time'] })
+  .then( collected =>{
+    msg.delete();
+    let idC = msg.guild.channels.find(c=>c.id == collected.first().mentions.channels.first().id)
+    if(!idC) return msgs.edit("لم اجد الروم");
+     idC = idC.id;
+     msgs.edit(`${msg.author}, ادخل الايموجي الذي تريدة للتفعيل`)
+const filter = response => response.author.id === msg.author.id;
+msg.channel.awaitMessages(filter, { maxMatches: 1, time: 30000, errors: ['time'] })
+.then( collected =>{
+if(!emojiss.hasEmoji(collected.first().mentions._content)) return msgs.edit("ادخل ايموجي صحيح !");
+newemoji = collected.first().mentions._content;
+msg.delete();
+msgs.edit(`${msg.author}, منشن للرتبة الذي تريدها`)
+const filter = response => response.author.id === msg.author.id;
+msg.channel.awaitMessages(filter, { maxMatches: 1, time: 30000, errors: ['time'] })
+.then( collected =>{
+let roleW = collected.first().mentions.roles.first()
+if(!roleW) {
+  let embed = new Discord.RichEmbed()
+  .setColor("#42f4f4")
+  .setTitle(`:x: - منشن الرتبة `);
+  msg.reply(embed).then( z => z.delete(3000)); return
+};
+let role = msg.guild.roles.find(`name`, roleW.name);
+if(!role) {
+  let embed = new Discord.RichEmbed()
+  .setColor("#42f4f4")
+  .setTitle(`:x: - Could't find \`${roleW.name}\` role.`);
+msg.reply(embed).then( msgs => msgs.delete(3000));
+return
+}
+roleNew = role;
+msgs.edit(`${msg.author}, ادخل النص الذي تريدة`)
+const filter = response => response.author.id === msg.author.id;
+msg.channel.awaitMessages(filter, { maxMatches: 1, time: 30000, errors: ['time'] })
+.then( collected =>{
+stringNew = collected.first().mentions._content;
+let channel = msg.guild.channels.get(idC);
+if(!channel) {
+  let embed = new Discord.RichEmbed()
+  .setColor("#42f4f4")
+  .setTitle(`:x: - Could't find \`${idC}\` Channel.`);
+msg.reply(embed).then( msgs => msgs.delete(3000));
+return
+}
+channel.bulkDelete(100)
+channel.send(`@here || @everyone
+${msg.guild.name}© :arrow_down:
+ 
+${stringNew}
+`).then( msgA =>{
+msgA.react(newemoji).then(()=>{
+  const Ac = (reaction, user) => reaction.emoji.name === newemoji && !user.bot;
+  const Acc = msgA.createReactionCollector(Ac, {time: 120000});
+  Acc.on("collect", r=>{
+  let member = msg.guild.members.get(r.users.last().id);
+  if(!member) return;
+  r.remove(member.user);
+if(member.roles.find(r=>r.name == roleNew.name)) return;
+    member.addRole(roleNew);
+  channel.send(`${member.user}, تم تفعيلك`).then(z => z.delete(1500));
+})})})
+}).catch(e => {console.log(e.message)});  
+}).catch(e => {console.log(e.message)});
+}).catch(e => {console.log(e.message)});
+}).catch(e => {console.log(e.message)});
+})
+///
+}});
+
+
+
+
+
+
+
+
+
+
+
+let vojson = JSON.parse(fs.readFileSync('vojson.json', 'utf8'))
 client.on('message', message => {
-if(message.content.startsWith("^server")){
-  if(!message.guild.member(message.author).hasPermission("ADMINISTRATOR")) return message.reply(`**هذه الخاصية للادارة فقط** :negative_squared_cross_mark: `)
-if(!message.channel.guild) return message.reply(' ');
-const millis = new Date().getTime() - message.guild.createdAt.getTime();
-const now = new Date();
-(now, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
-const verificationLevels = ['None', 'Low', 'Medium', 'Insane', 'Extreme'];
-const days = millis / 1000 / 60 / 60 / 24;
-let roles = client.guilds.get(message.guild.id).roles.map(r => r.name);
-var embed  = new Discord.RichEmbed()
-.setAuthor(message.guild.name, message.guild.iconURL)
-.addField("**🆔 Server ID:**", message.guild.id,true)
-.addField("**📅 Created On**", message.guild.createdAt.toLocaleString(),true)
-.addField("**👑 Owned by**",`${message.guild.owner.user.username}#${message.guild.owner.user.discriminator}`)
-.addField("👥 Members ",`[${message.guild.memberCount}]`,true)
-.addField('**💬 Channels **',`**${message.guild.channels.filter(m => m.type === 'text').size}**` + ' text | Voice  '+ `**${message.guild.channels.filter(m => m.type === 'voice').size}** `,true)
-.addField("**🌍 Others **" , message.guild.region,true)
-.addField("** 🔐 Roles **",`**[${message.guild.roles.size}]** Role `,true)
-.setColor('#000000')
-message.channel.sendEmbed(embed)
+    if(message.content.startsWith("^setVc")) {
+let channel = message.content.split(" ").slice(1).join(" ")
+let channelfind = message.guild.channels.find('name', `${channel}`)
+if(!channel) return message.channel.send('Please Type The Voice Channel Name Example: !setVc <Channel name>')
+if(!channelfind) return message.channel.send('Please Type The Voice Channel Name Example: !setVc <Channel name>')
+vojson[message.guild.id] = {
+stats: 'enable',
+chid: channelfind.id,
+guild: message.guild.id
 
 }
-});
+channelfind.setName(`VoiceOnline: ${message.guild.members.filter(m => m.voiceChannel).size}`)
+message.channel.send('**Done The Voice Online  Is Turned On**')
+}
+    if(message.content.startsWith("^vc off")) {
+      message.guild.channels.find('id', `${vojson[message.guild.id].chid}`).delete()
+    vojson[message.guild.id] = {
+        stats: 'disable',
+        chid: 'undefined',
+        guild: message.guild.id
+        }
+        message.channel.send('**Done The Voice Online Is Turned Off**')
 
+}
+fs.writeFile("./vojson.json", JSON.stringify(vojson), (err) => {
+    if (err) console.error(err)
+  })
+})
 
-
-
-
-
-
-
-
-
-
-
-
+client.on('voiceStateUpdate', (oldMember , newMember) => {
+            if(!vojson[oldMember.guild.id]) vojson[oldMember.guild.id] = {
+                stats: 'disable',
+                chid: 'undefined',
+                guild: 'undefined'
+            }
+                    if (vojson[oldMember.guild.id].stats === 'enable') {
+                        let ch = vojson[oldMember.guild.id].chid
+                        let channel = oldMember.guild.channels.get(ch)
+                        let guildid = vojson[oldMember.guild.id].guild
+                        channel.setName(`VoiceOnline: ${oldMember.guild.members.filter(m => m.voiceChannel).size}`)
+                    };
+                    if (vojson[oldMember.guild.id].stats === 'disable') {
+                    return;
+                    }
+        });
 
 
 
